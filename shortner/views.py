@@ -39,4 +39,11 @@ class UrlUpdateView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UrlDeleteView(APIView):
+    def delete(self, request, short_url):
+        url = get_object_or_404(Url, short_url=short_url)
+        url.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
