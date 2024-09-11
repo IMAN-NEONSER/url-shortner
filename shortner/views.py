@@ -6,6 +6,8 @@ from rest_framework import status
 from .serializers import UrlSerializer
 
 # Create your views here.
+
+
 class UrlShortnerView(APIView):
     def post(self, request):
         serializer = UrlSerializer(data=request.data)
@@ -22,9 +24,19 @@ class UrlRedirectView(APIView):
         url.save()
         return redirect(url.original_url)
 
-class  UrlStatsView(APIView):
+
+class UrlStatsView(APIView):
     def get(self, request, short_url):
         url = get_object_or_404(Url, short_url=short_url)
         serializer = UrlSerializer(url)
         return Response(serializer.data)
 
+
+class UrlUpdateView(APIView):
+    def put(self, request, short_url):
+        url = get_object_or_404(Url, short_url=short_url)
+        serializer = UrlSerializer(Url, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response
