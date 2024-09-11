@@ -14,6 +14,7 @@ class UrlShortnerView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class UrlRedirectView(APIView):
     def get(self, request, short_url):
         url = get_object_or_404(Url, short_url=short_url)
@@ -21,4 +22,9 @@ class UrlRedirectView(APIView):
         url.save()
         return redirect(url.original_url)
 
+class  UrlStatsView(APIView):
+    def get(self, request, short_url):
+        url = get_object_or_404(Url, short_url=short_url)
+        serializer = UrlSerializer(url)
+        return Response(serializer.data)
 
